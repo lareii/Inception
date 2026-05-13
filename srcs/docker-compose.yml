@@ -1,4 +1,12 @@
 services:
+  redis:
+    build: ./reqs/redis
+    image: redis
+    container_name: inception-redis
+    restart: unless-stopped
+    networks:
+      - inception
+
   mariadb:
     build: ./reqs/mariadb
     image: mariadb
@@ -25,6 +33,7 @@ services:
       - inception
     depends_on:
       - mariadb
+      - redis
     secrets:
       - db_password
       - wp_admin_password
@@ -36,10 +45,10 @@ services:
     container_name: inception-nginx
     # restart always if not manually stopped
     restart: unless-stopped
+    # necessary for envsubst
     env_file: ./.env
     volumes:
       - wordpress_data:/var/www/wordpress
-    # necessary for envsubst
     networks:
       - inception
     ports:

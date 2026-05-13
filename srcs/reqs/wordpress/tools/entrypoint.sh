@@ -44,6 +44,12 @@ if [ ! -f "wp-config.php" ]; then
         --role=editor \
         --user_pass=$WP_USER_PASSWORD \
         --allow-root
+
+    # add redis configuration to wp-config.php:L41
+    sed -i "41 i define( 'WP_REDIS_HOST', 'redis' );\ndefine( 'WP_REDIS_PORT', '6379' );\n" wp-config.php
+
+    wp plugin install redis-cache --activate --allow-root
+    wp redis enable --allow-root
 fi
 
 # dont demonize php-fpm. if pid 1 process is not running or demonized, the container will stop

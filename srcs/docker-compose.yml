@@ -71,6 +71,18 @@ services:
     depends_on:
       - wordpress
 
+  adminer:
+    build: ./reqs/adminer
+    image: adminer
+    container_name: inception-adminer
+    restart: unless-stopped
+    networks:
+      - inception
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mariadb
+
 networks:
   inception:
     driver: bridge

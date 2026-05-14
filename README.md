@@ -3,10 +3,11 @@
 ## Description
 Inception is a system administration project from the 42 curriculum that introduces containerization with Docker. The goal is to build a small infrastructure for multiple services running in isolated containers, orchestrated through Docker Compose, and all of this is done inside a virtual machine. (that's why it's called Inception, lol)
 
-The infrastructure includes 3 containers that communicate over a private Docker network:
+The infrastructure includes 4 containers that communicate over a private Docker network:
 - **NGINX:** the only container exposed to the host, serving HTTPS traffic on port 443 using a self-signed TLS certificate. It acts as a reverse proxy in front of WordPress.
 - **WordPress + PHP-FPM:** runs the WordPress application and processes PHP requests forwarded by NGINX.
 - **MariaDB:** stores the WordPress database. Not exposed outside the internal network.
+- **Redis:** used as an object cache for WordPress, improving performance by caching database query results.
 
 Each service runs in its own container built from a Debian (bookworm) base image. Containers are configured through environment variables loaded from a .env file, and persistent data (database files, WordPress source) is stored on the host through bind-mounted Docker volumes.
 
@@ -33,24 +34,18 @@ make up  # or simply make
 5. Open `https://$(DOMAIN_NAME)` in your browser and ta-da! (self-signed certificate warning is expected.)
 
 ## Resources
-### Docker:
 - https://docs.docker.com/engine/
 - https://docs.docker.com/reference/cli/docker/
 - https://docs.docker.com/reference/compose-file/
-
-### NGINX:
 - https://nginx.org/en/docs/http/configuring_https_servers.html
 - https://www.cyberciti.biz/faq/configure-nginx-to-use-only-tls-1-2-and-1-3/
-
-### MariaDB:
 - https://github.com/MariaDB/mariadb-docker/ (inspired Dockerfile and entrypoint script)
 - https://mariadb.com/docs/server/server-management/install-and-upgrade-mariadb
 - https://mariadb.com/docs/server/server-management/automated-mariadb-deployment-and-administration/docker-and-mariadb/installing-and-using-mariadb-via-docker
-
-### WordPress:
 - https://make.wordpress.org/cli/handbook/guides/installing/
+- https://github.com/rhubarbgroup/redis-cache/blob/develop/INSTALL.md
 
-### AI:
+### AI
 Google Gemini and Claude used to provide quick, detailed answers instead of writing entire projects. Here are some of the questions I asked them:
 - "What are **cgroups** and **namespaces** in Linux kernel? How do they work together to provide isolation and resource management for containers?"
 - "How **tini** works as an init system for containers?"
@@ -66,6 +61,7 @@ This project uses Docker to package each service (NGINX, WordPress/PHP-FPM, Mari
 - **Separation of concerns:** WordPress runs PHP-FPM only, NGINX is the only HTTP-facing service. They communicate over FastCGI through the internal Docker network.
 - **Idempotent entrypoints:** each entrypoint script uses flags to ensure that initialization steps performed only once.
 - MariaDB initialization via temporary `mysqld_safe` instead of `--bootstrap` (which runs with `--skip-grant-tables` and silently refuses `CREATE USER` / `GRANT`), the entrypoint starts a temporary daemon on a UNIX socket, runs the SQL, then shuts it down before `exec`-ing the `mysqld`.
+- Redis used as an object cache for WordPress, configured with the `redis-cache` plugin and environment variables.
 
 ### Comparisions
 

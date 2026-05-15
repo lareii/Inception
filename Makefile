@@ -18,7 +18,6 @@ down:
 	docker compose -f $(COMPOSE_PATH) down
 
 clean:
-	# --remove-orphans clears old images
 	docker compose -f $(COMPOSE_PATH) down -v --rmi local --remove-orphans
 
 fclean: clean

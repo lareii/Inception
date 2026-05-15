@@ -44,11 +44,12 @@ services:
     image: ftp
     container_name: inception-ftp
     restart: unless-stopped
+    stop_signal: SIGKILL
     volumes:
       - wordpress_data:/var/www/wordpress
     ports:
       - "21:21"
-      - "21000-21100:21000-21100"
+      - "21100-21110:21100-21110"
     depends_on:
       - wordpress
     secrets:
@@ -76,6 +77,9 @@ services:
     image: adminer
     container_name: inception-adminer
     restart: unless-stopped
+    # php needs SIGINT to stop gracefully, not SIGTERM
+    stop_signal: SIGINT
+    stop_grace_period: 3s
     networks:
       - inception
     ports:

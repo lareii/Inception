@@ -10,10 +10,6 @@ WORKDIR /var/www/html
 
 RUN curl -o index.php https://www.adminer.org/static/download/5.4.2/adminer-5.4.2.php
 
-COPY ./tools/entrypoint.sh /usr/local/bin/
-
-RUN chmod +x /usr/local/bin/entrypoint.sh
-
 EXPOSE 8080
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+ENTRYPOINT ["php", "-S", "0.0.0:8080", "-t", "/var/www/html"]

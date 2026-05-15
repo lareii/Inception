@@ -5,9 +5,8 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-COPY ./tools/entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/entrypoint.sh
-
 EXPOSE 6379
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+# allkeys-lru: delete first the least recently used keys when maxmemory limit is reached
+ENTRYPOINT ["redis-server", "--bind", "0.0.0.0", "--daemonize", "no", "--protected-mode", "no", \
+             "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"]

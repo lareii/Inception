@@ -18,10 +18,10 @@ Each service runs in its own container built from a Debian (bookworm) base image
 ## Instructions
 
 ### Prerequisites
-A Linux virtual machine with the following requirements:
-- Docker and Docker Compose installed
-- sudo privileges to edit the `/etc/hosts` file and create host-side directories for bind mounts
-- `make` installed
+- A Linux-based virtual machine.
+- `Docker` and `Docker Compose` installed.
+- `make` installed.
+- `sudo` privileges (needed to edit the `/etc/hosts` file).
 - An FTP client for connecting to the FTP container (optional)
 
 ### Setup

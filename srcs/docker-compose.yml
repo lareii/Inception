@@ -87,6 +87,15 @@ services:
     depends_on:
       - mariadb
 
+  static:
+    build: ./reqs/static
+    image: static
+    container_name: inception-static
+    restart: unless-stopped
+    stop_signal: SIGINT
+    ports:
+      - "4242:4242"
+
 networks:
   inception:
     driver: bridge

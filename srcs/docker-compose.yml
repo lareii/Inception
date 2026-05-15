@@ -96,6 +96,16 @@ services:
     ports:
       - "4242:4242"
 
+  portainer:
+    build: ./reqs/portainer
+    image: portainer
+    container_name: inception-portainer
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "9000:9000"
+
 networks:
   inception:
     driver: bridge

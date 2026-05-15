@@ -3,13 +3,15 @@
 ## Description
 Inception is a system administration project from the 42 curriculum that introduces containerization with Docker. The goal is to build a small infrastructure for multiple services running in isolated containers, orchestrated through Docker Compose, and all of this is done inside a virtual machine. (that's why it's called Inception, lol)
 
-The infrastructure includes 6 containers that communicate over a private Docker network:
+The infrastructure includes 8 containers that communicate over a private Docker network:
 - **NGINX:** the only container exposed to the host, serving HTTPS traffic on port 443 using a self-signed TLS certificate. It acts as a reverse proxy in front of WordPress.
 - **WordPress + PHP-FPM:** runs the WordPress application and processes PHP requests forwarded by NGINX.
 - **MariaDB:** stores the WordPress database. Not exposed outside the internal network.
 - **Redis:** used as an object cache for WordPress, improving performance by caching database query results.
 - **FTP:** provides FTP access to the WordPress source files.
 - **Adminer:** a web-based database management tool, accessible at `http://$(DOMAIN_NAME):8080`.
+- **A static website:** served by Python's built-in HTTP server on port 4242, accessible at `http://$(DOMAIN_NAME):4242`.
+- **Portainer:** a web-based Docker management interface, accessible at `http://$(DOMAIN_NAME):9000`.
 
 Each service runs in its own container built from a Debian (bookworm) base image. Containers are configured through environment variables loaded from a .env file, and persistent data (database files, WordPress source) is stored on the host through bind-mounted Docker volumes.
 

@@ -11,6 +11,10 @@ RUN curl -LO https://github.com/portainer/portainer/releases/download/2.39.2/por
     tar -xzf portainer-2.39.2-linux-amd64.tar.gz && \
     rm portainer-2.39.2-linux-amd64.tar.gz
 
+COPY ./tools/entrypoint.sh /usr/local/bin/
+
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 EXPOSE 9000
 
-ENTRYPOINT ["/app/portainer/portainer"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

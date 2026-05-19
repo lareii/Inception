@@ -105,6 +105,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "9000:9000"
+    secrets:
+      - portainer_password
 
 networks:
   inception:
@@ -138,3 +140,5 @@ secrets:
     file: ../secrets/wp_user_password.txt
   ftp_password:
     file: ../secrets/ftp_password.txt
+  portainer_password:
+    file: ../secrets/portainer_password.txt

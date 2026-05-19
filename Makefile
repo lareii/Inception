@@ -22,7 +22,6 @@ clean:
 
 fclean: clean
 	rm -rf $(VOLUMES_PATH)
-	docker builder prune
 
 re: fclean all
 
